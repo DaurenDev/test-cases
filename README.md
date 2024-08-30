@@ -3,7 +3,7 @@
 1. [Introduction](#Introduction)
 2. [Data](#datatable)
 3. [Rules and exceptions to apply](#Rules)
-4. [Test cases](#conclusion)
+4. [Test cases](#Test-cases)
 
 ## Introduction
 The decision-making system (DMS) is used by E-Market, considering products it has to offer, thus giving corresponding recommendations of products to buy. The relevance of items-for-sale depends on rules and exceptions that test coverage contains in itself, which means users will get recommendations based upon standards of the DMS. 
@@ -14,12 +14,12 @@ The decision-making system (DMS) is used by E-Market, considering products it ha
 <br>
 ## Data
 In order to determine whether an item is relevant or not, we need a data source from which information will be retrieved and tested using test cases. The table shown below will provide with necessary data sets:
-| group_id        | item                                       | amount | score | identity score | risk_strategy_type       | payment_is_test | product_type       |
+| group_id        | item                                       | amount | score | identity_score | risk_strategy_type       | payment_is_test | product_type       |
 |-----------------|--------------------------------------------|--------|-------|----------------|--------------------------|-----------------|--------------------|
 | 6ef811855e53    | photo_camera                               | 1300   | 410   | 85             | high                     | False           | electronics        |
 | 5a9d3f7292a7    | bathtub                                    | 800    | 390   | 105            | high                     | False           | installments       |
 | 4bc72a689e31    | ear_plugs                                  | 1500   | 1760  | 90             | high                     | False           | mixed              |
-| 7cf9462101b2    | book                                       | 2000   | 2100  | 78             | high                     | True            | electronics        |
+| 7cf9462101b2    | book                                       | 2000   | 2100  | 78             | high                     | True            | mixed              |
 | 2de8a473a0d6    | refrigerator                               | 950    | 1300  | 55             | middle                   | False           | kitchen utensils   |
 | 3af927e4b569    | vacuum cleaner                             | 1700   | 1520  | 82             | high                     | False           | home appliances    |
 
@@ -62,8 +62,30 @@ Rules and exceptions are represented as condition expressions with operands (col
 **Exceptions**
 
 ```python
-if risk_strategy_type in ("light", "middle") or payment_is_test == True or product_type = "installments":
+if risk_strategy_type in ("light", "middle") or payment_is_test == True or product_type == "installments":
 ```
+
+<br>
+
+## Test-cases
+
+Contents of test cases are represented as tables where there are attributes like:
+- ID (an identification number of test case)
+- Description (general expected result)
+- Step (what test method does at the moment)
+- Expected result (expected result after the current step)
+<br>
+
+| ID           | 1                    |                     |
+|--------------|----------------------|---------------------|
+| Description  | The SC_N rule should be triggered due to these attributes:<br>group_id = "6ef811855e53"<br>item = "photo_camera"<br>amount = 1300<br>score = 410||
+| **№**            | **Step**       | **Expected result**               |
+| 1            | Retrieve the record from database (given table above)   | The data is retrieved and written into DTO object        |
+| 2            | Info      | Info             |
+| 3            | Info | Info                  |
+| 4            | Info     | Info           |
+
+
   
 
   
