@@ -166,7 +166,7 @@ SET decision = 'approve', stop_factors = NULL
 WHERE decision IS NULL;
 ```
 
-**Expected result**
+**Expected result**<br>
 The updated version of the table would look like this:<br>
 | group_id        | item                                       | amount | score | identity_score | risk_strategy_type       | payment_is_test | product_type       | decision | stop_factors |
 |-----------------|--------------------------------------------|--------|-------|----------------|--------------------------|-----------------|--------------------|----------|--------------|
