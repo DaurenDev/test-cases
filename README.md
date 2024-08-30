@@ -68,22 +68,26 @@ if risk_strategy_type in ("light", "middle") or payment_is_test == True or produ
 <br>
 
 ## Test-cases
+**Preconditions:**
+- Database is fully integrated so we can use API controllers in order to get access to the data. 
+- Given the "retrieve(sqlQuery)" method that takes in string parameter which contains SQL query. This method will supposedly get the record depending on the query itself.
+- Selenium framework is set up so we can check values of "decision" and "stop_factors" fields.
+- there are 3 boolean methods: sc_n_istriggered, exp_d_istriggered, exception_istriggered 
+- there are 3 boolean variables: has_sc_n_rule, has_exp_d_rule, has_exception.
 
-Contents of test cases are represented as tables where there are attributes like:
+**Contents of test cases are represented as tables where there are attributes like:**
 - ID (an identification number of test case)
-- Description (general expected result)
+- Description (a general expected result)
 - Step (what test method does at the moment)
-- Expected result (expected result after the current step)
+- Expected result (an expected result after the current step)
 <br>
 
 | ID           | 1                    |                     |
 |--------------|----------------------|---------------------|
 | Description  | The SC_N rule should be triggered due to these attributes:<br>group_id = "6ef811855e53"<br>item = "photo_camera"<br>amount = 1300<br>score = 410||
-| **№**            | **Step**       | **Expected result**               |
-| 1            | Retrieve the record from database (given table above)   | The data is retrieved and written into DTO object        |
-| 2            | Info      | Info             |
-| 3            | Info | Info                  |
-| 4            | Info     | Info           |
+| **№**        | **Step**                                                        | **Expected result**                                                            |
+| 1            | Retrieve the record from database (given table above)           | The data is retrieved and written into DTO object                              |
+| 2            | Check DTO object for rules and exceptions using boolean methods | The SC_N rule is triggered<br>"decision" field has "reject" value, <br>"stop_factors" field has "SC_N" value                                                                                                                         |
 
 
   
