@@ -212,7 +212,7 @@ if risk_strategy_type in ("light", "middle") or payment_is_test == True or produ
   SELECT *
   FROM records
   WHERE 
-    (group_id = '6ef811855e53' OR group_id = '5a9d3f7292a7')
+    (group_id = '4bc72a689e31' OR group_id = '7cf9462101b2')
     AND (decision = 'reject' AND stop_factors = 'EXP_D')
     AND (decision IS NULL AND stop_factors = 'EXP_D')
   ```
