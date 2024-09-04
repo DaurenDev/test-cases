@@ -83,37 +83,78 @@ if risk_strategy_type in ("light", "middle") or payment_is_test == True or produ
 <br>
 
 ## Test-cases
-Test cases will be executed based on given rules and table shown above in order to determine values of "decision" and "stop_factors" for each row, which means every record on the table will be evaluated through these rules.
+***Test cases will be executed based on given rules and table shown above in order to determine values of "decision" and "stop_factors" for each row, which means every record on the table will be evaluated through these rules.***
 
-**Case 1: SC_N rule**
+<br>
 
-```sql
--- handling the first rule;
-UPDATE records -- selecting the table which will be updated;
-SET decision = 'reject', stop_factors = 'SC_N' -- using SET clause to determine fields for update;
-WHERE (group_id = '6ef811855e53' OR group_id = '5a9d3f7292a7') -- choosing 1st and 2nd rows in the table;
-  AND item IN ('video_camera', 'photo_camera', 'dining_table', 'bathtub', 'baby_product') -- condition expressions
-  AND (
-    (score <= 350) OR
-    (score <= 400 AND amount > 600) OR
-    (score <= 420 AND amount > 1200) OR
-    (identity_score > 100 AND amount > 750 AND score <= 420)
-  )
-  AND NOT (risk_strategy_type IN ('light', 'middle') OR payment_is_test = True OR product_type = 'installments');
+**Case 1:**<br> Due to the high percentage of fraud, a record with the "photo_camera" item should follow the "SC_N" rule since the "identity_score" value is greater than 100. The exceptions should not be followed.
 
--- handling the exception if the first rule is triggered
-UPDATE records
-SET stop_factors = 'SC_N'
-WHERE (risk_strategy_type IN ('light', 'middle') OR payment_is_test = True OR product_type = 'installments')
-  AND (group_id = '6ef811855e53' OR group_id = '5a9d3f7292a7')
-  AND item IN ('video_camera', 'photo_camera', 'dining_table', 'bathtub', 'baby_product')
-  AND (
-    (score <= 350) OR
-    (score <= 400 AND amount > 600) OR
-    (score <= 420 AND amount > 1200) OR
-    (identity_score > 100 AND amount > 750 AND score <= 420)
-  );
-```
+<br>
+
+***Steps:***
+- Determine the table that will be used for update (line 1)
+  <br>
+  ```sql
+  UPDATE records
+  ```
+  <br>
+- Use SET clause to choose record fields to be changed thus determining record's status (line 2):<br>
+  "decision" field value should be set to "reject"<br>
+  "stop_factors" field value should be set to "SC_N"
+  <br>
+  ```sql
+  UPDATE records
+  SET decision = 'reject', stop_factors = 'SC_N'
+  ```
+  <br>
+- Use WHERE clause and AND operator to define multiple conditions that should be met in order to update the found record. In this case, conditions of the "SC_N" rule are used (lines 3-10):
+  <br>
+  ```sql
+  UPDATE records
+  SET decision = 'reject', stop_factors = 'SC_N'
+  WHERE (group_id = '6ef811855e53' OR group_id = '5a9d3f7292a7') -- choosing 1st and 2nd rows in the table;
+    AND item IN ('video_camera', 'photo_camera', 'dining_table', 'bathtub', 'baby_product')
+    AND (
+      (score <= 350) OR
+      (score <= 400 AND amount > 600) OR
+      (score <= 420 AND amount > 1200) OR
+      (identity_score > 100 AND amount > 750 AND score <= 420)
+    )
+  ```
+  <br>
+- Use NOT operator to ensure that the found record doesn't match predefined exceptions (lines 11):
+  ```sql
+    UPDATE records
+    SET decision = 'reject', stop_factors = 'SC_N'
+    WHERE (group_id = '6ef811855e53' OR group_id = '5a9d3f7292a7') -- choosing 1st and 2nd rows in the table;
+      AND item IN ('video_camera', 'photo_camera', 'dining_table', 'bathtub', 'baby_product')
+      AND (
+      (score <= 350) OR
+      (score <= 400 AND amount > 600) OR
+      (score <= 420 AND amount > 1200) OR
+      (identity_score > 100 AND amount > 750 AND score <= 420)
+    )
+      AND NOT (risk_strategy_type IN ('light', 'middle') OR payment_is_test = True OR product_type = 'installments');
+  ```
+  <br>
+- Let's display the result of the found (if it is) and updated record:
+  ```sql
+  SELECT *
+  FROM records
+  WHERE 
+    (group_id = '6ef811855e53' OR group_id = '5a9d3f7292a7') -- choosing 1st and 2nd rows in the table;
+    AND decision = 'reject'
+    AND stop_factors = 'SC_N'
+  ```
+<br>
+
+***Expected result:*** The first row will be returned <br>
+| group_id        | item                                       | amount | score | identity_score | risk_strategy_type       | payment_is_test | product_type       | decision | stop_factors |
+|-----------------|--------------------------------------------|--------|-------|----------------|--------------------------|-----------------|--------------------|----------|--------------|
+| 6ef811855e53    | photo_camera                               | 1300   | 410   | 85             | high                     | False           | electronics        | reject   | SC_N         |
+
+
+<br>
 
 **Case 2: EXP_D**
 
